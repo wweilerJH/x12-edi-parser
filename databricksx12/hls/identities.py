@@ -75,6 +75,10 @@ class ClaimIdentity(Identity):
                 [{'prcdr_cd': s.element(i,1), 'date_format': s.element(i,2), 'date': s.element(i,3)} for i in list(range(1, s.segment_len()))]
             for s in other_hi])) 
         }
+        print(f"DEBUG: other_hi = {other_hi}")
+        print(f"DEBUG: hi = {hi}")
+        print(f"DEBUG: type(hi) = {type(hi)}")
+        
         bg_codes = []
         for s in other_hi:
             for i in range(1, s.segment_len()):
