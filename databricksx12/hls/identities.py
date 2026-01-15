@@ -75,20 +75,17 @@ class ClaimIdentity(Identity):
                 [{'prcdr_cd': s.element(i,1), 'date_format': s.element(i,2), 'date': s.element(i,3)} for i in list(range(1, s.segment_len()))]
             for s in other_hi])) 
         }
-        print(f"DEBUG: other_hi = {other_hi}")
-        print(f"DEBUG: hi = {hi}")
-        print(f"DEBUG: type(hi) = {type(hi)}")
         
-        bg_codes = []
-        for s in other_hi:
+        print(f"DEBUG: other_hi length = {len(other_hi)}")
+        for idx, s in enumerate(other_hi):
+            print(f"DEBUG: Segment {idx} has {s.segment_len()} elements")
             for i in range(1, s.segment_len()):
-                code_type = s.element(i, 0)
-                code_value = s.element(i, 1)
-                print(f"DEBUG: i={i}, code_type='{code_type}' (type: {type(code_type)}), code_value='{code_value}'")
-                if code_type == 'BG':
-                    bg_codes.append(code_value)
-
-        self.condition_codes = bg_codes
+                print(f"  Element {i}: qualifier='{s.element(i, 0)}', value='{s.element(i, 1)}'")
+        
+        self.condition_codes = list(itertools.chain(*[
+            [s.element(i, 1) for i in range(1, s.segment_len()) if s.element(i, 0) == 'BG']
+            for s in other_hi
+        ]))
         
 
 # POA is the last sub element of the respective segments
