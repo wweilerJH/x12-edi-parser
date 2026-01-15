@@ -77,8 +77,8 @@ class ClaimIdentity(Identity):
         his = hi if isinstance(hi, list) else [hi]  
         self.condition_codes = list(itertools.chain.from_iterable(  
             [  
-            [s.element(i, 2) for i in range(1, s.segment_len()) if s.element(i, 1) == 'BG' and s.element(i, 2)]  
-            for s in his  
+                [s.element(i, 2) for i in range(s.segment_len()) if s.element(i, 1) == 'BG' and s.element(i, 2)]  
+                for s in (hi if isinstance(hi, list) else [hi])  
             ]  
                 )) 
         
