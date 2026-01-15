@@ -82,8 +82,8 @@ class ClaimIdentity(Identity):
         bg_codes = []
         for s in other_hi:
             for i in range(1, s.segment_len()):
-                code_type = s.element(i, 1)
-                code_value = s.element(i, 2)
+                code_type = s.element(i, 0)
+                code_value = s.element(i, 1)
                 print(f"DEBUG: i={i}, code_type='{code_type}' (type: {type(code_type)}), code_value='{code_value}'")
                 if code_type == 'BG':
                     bg_codes.append(code_value)
