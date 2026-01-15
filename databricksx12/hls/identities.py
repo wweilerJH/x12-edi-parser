@@ -81,6 +81,7 @@ class ClaimIdentity(Identity):
             for s in his  
             ]  
                 )) 
+        
 
 # POA is the last sub element of the respective segments
 class DiagnosisIdentity(Identity):
