@@ -74,12 +74,13 @@ class ClaimIdentity(Identity):
                 [{'prcdr_cd': s.element(i,1), 'date_format': s.element(i,2), 'date': s.element(i,3)} for i in list(range(1, s.segment_len()))]
             for s in other_hi])) 
         }
-        self.condition_codes = [  
-            s.element(i, 2)  
-            for s in hi if s.element(1, 1) == 'BG'  
-            for i in range(1, s.segment_len())  
-            if s.element(i, 2)  
+        his = hi if isinstance(hi, list) else [hi]  
+        self.condition_codes = list(itertools.chain.from_iterable(  
+            [  
+            [s.element(i, 2) for i in range(1, s.segment_len()) if s.element(i, 1) == 'BG' and s.element(i, 2)]  
+            for s in his  
             ]  
+                )) 
 
 # POA is the last sub element of the respective segments
 class DiagnosisIdentity(Identity):
