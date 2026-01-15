@@ -3,6 +3,7 @@ from typing import List, Dict
 import itertools
 from collections import defaultdict
 from functools import reduce
+import json
 
 class Identity:
 
@@ -74,13 +75,29 @@ class ClaimIdentity(Identity):
                 [{'prcdr_cd': s.element(i,1), 'date_format': s.element(i,2), 'date': s.element(i,3)} for i in list(range(1, s.segment_len()))]
             for s in other_hi])) 
         }
-        his = hi if isinstance(hi, list) else [hi]  
-        self.condition_codes = list(itertools.chain.from_iterable(  
-            [  
-                [s.element(i, 2) for i in range(s.segment_len()) if s.element(i, 1) == 'BG' and s.element(i, 2)]  
-                for s in (hi if isinstance(hi, list) else [hi])  
-            ]  
-                )) 
+        # Extract BG condition codes
+        self.condition_codes = self._extract_bg_codes(other_hi)
+
+    def _extract_bg_codes(self, hi_segments):
+        """Extract condition codes from HI segments with BG header"""
+        bg_codes = []
+        
+        for segment in hi_segments:
+            # Iterate through all elements in the segment (skip element 0 which is "HI")
+            for i in range(1, segment.segment_len()):
+                try:
+                    # Get the element and parse the JSON string
+                    element_value = segment.element(i)
+                    parsed = json.loads(element_value)
+                    
+                    # Check if it's a BG code and extract the condition code
+                    if parsed[0] == "BG":
+                        bg_codes.append(parsed[1])
+                except (json.JSONDecodeError, IndexError, TypeError):
+                    # Skip if parsing fails or element doesn't exist
+                    continue
+        
+        return bg_codes
         
 
 # POA is the last sub element of the respective segments
